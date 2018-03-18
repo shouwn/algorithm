@@ -38,8 +38,21 @@ public class Example4 {
     static int search3(int[] a, int value) {
         return search3(a, value, 0, a.length-1);
     }
-
+    
     static int search3(int[] a, int value, int start, int end) {
+    	
+    	if(start > end)
+    		return -1;
+    	
+    	int middle = (start + end) / 2;
+    	
+    	if(value > a[middle])
+    		return search3(a, value, middle + 1, end);
+    	else if(value < a[middle])
+    		return search3(a, value, start, middle - 1);
+    	else
+    		return middle;
+    	
     }
 
     public static void main(String[] args) {
