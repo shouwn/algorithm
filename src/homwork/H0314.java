@@ -1,4 +1,4 @@
-package algorithm;
+package homwork;
 
 import java.util.Scanner;
 
