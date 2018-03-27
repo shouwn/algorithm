@@ -6,10 +6,6 @@ import java.io.InputStreamReader;
 
 public class Traffic {
 	
-<<<<<<< HEAD
-	static final int OVER_TIME = 0;
-	static final int PROCESS_TIME = 1;
-=======
 	public static int[] log2Time(String[] log) {
 		int overTime = 0, processTime = 0;
 		
@@ -52,7 +48,6 @@ public class Traffic {
 		
 		return false;
 	}
->>>>>>> 21bc42370fbad8c4bbc0f5b7681eb738d2331220
 
 	public static void main(String[] args) throws IOException {
 
@@ -62,37 +57,11 @@ public class Traffic {
 		
 		String[] logs = input.replaceAll("[“”]", "").replaceAll("2016-09-15 ", "").split(", ");
 		input = null;
-<<<<<<< HEAD
-		int[][] time = new int[logs.length][2];
-=======
 		int[][] times = new int[logs.length][2];
->>>>>>> 21bc42370fbad8c4bbc0f5b7681eb738d2331220
 		
 		for(int i = 0; i < logs.length; i++) {
 			System.out.println(logs[i]);
 		}
-<<<<<<< HEAD
-
-	}
-	
-}
-
-class Time{
-	private int overTime; // 응답완료시간(ms)
-	private int processTime; // 처리시간(ms)
-	
-	public Time(String[] arr) {
-		int i = 3600;
-		
-		for(String s : arr[0].split(":")) {
-			overTime += Integer.valueOf(s) * i;
-			i /= 60;
-		}
-		
-		overTime *= 1000;
-		processTime = Integer.valueOf(arr[1].replaceAll("[.s]", ""));
-		
-=======
 		
 		int max = 0;
 		
@@ -127,8 +96,6 @@ class Time{
 		
 		System.out.println(max);
 
->>>>>>> 21bc42370fbad8c4bbc0f5b7681eb738d2331220
 	}
-	
-	
+
 }
