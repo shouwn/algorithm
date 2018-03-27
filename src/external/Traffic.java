@@ -33,7 +33,6 @@ class Time{
 	public Time(String[] arr) {
 		int i = 3600;
 		
-			}
 		for(String s : arr[0].split(":")) {
 			overTime += Integer.valueOf(s) * i;
 			i /= 60;
