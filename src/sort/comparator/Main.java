@@ -55,7 +55,7 @@ public class Main {
 		Sort.insertionSort(arr2, Person.getComparator(Person.NAME));
 		
 		System.out.println("\ninsertionSort\n" + 
-				Arrays.toString(arr1) + "\n" + Arrays.toString(arr2));
+		Arrays.toString(arr1) + "\n" + Arrays.toString(arr2));
 	}
 
 }
