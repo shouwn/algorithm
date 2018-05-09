@@ -9,7 +9,6 @@ public class BinaryGap {
 		int input = scan.nextInt();
 		int n = input;
 		scan.close();
-		
 		boolean start = false;
 		
 		int max = 0;
