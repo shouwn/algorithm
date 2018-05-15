@@ -8,7 +8,7 @@ public class OddOccurrencesInArray {
 
 	public static void main(String[] args) {
 		System.out.println("odd - soultion1: " + solution1(new int[] {9, 3, 9, 3, 9, 7, 9}, 6));
-		System.out.println("odd - soultion2: " + solution2(new int[] {9, 3, 9, 3, 9, 7, 9}, 6));
+		System.out.println("odd - soultion2: " + solution2(new int[] {9, 3, 9, 3, 9, 7, 9}));
 		System.out.println("odd - soultion3: " + solution3(new int[] {9, 3, 9, 3, 9, 7, 9}, 6));
 		System.out.println("mode: " + getMode(new int[] {9, 3, 9, 3, 9, 7, 9}, 6));
 	}
@@ -17,11 +17,19 @@ public class OddOccurrencesInArray {
 		return Arrays.stream(a).reduce((pre, cur) -> pre ^ cur).orElse(0);
 	}
 
-	public static int solution2(int[] a, int N) {
+	public static int solution2(int[] A) {
+		
+		int result = A[0];
+		for(int i = 1; i < A.length; i++) 
+			result ^= A[i];
+		return result;
+		
+		/*
 		int result = a[0];
 		for(int i = 1; i <= N; i++)
 			result = result ^ a[i];
 		return result;
+		*/
 	}
 
 	public static int solution3(int[] a, int N) {
