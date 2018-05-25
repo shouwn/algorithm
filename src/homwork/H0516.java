@@ -75,7 +75,7 @@ class WordInfo implements Comparable<WordInfo>{
 
 	@Override
 	public String toString() {
-		return "[word=" + word + ", count=" + count + "]";
+		return "(" + word + ", " + count + ")";
 	}
 }
 
@@ -146,6 +146,9 @@ public class H0516 {
 	}
 
 	public static void solution1() throws FileNotFoundException, IOException {
+		System.out.print("solution1: ");
+		long time = System.currentTimeMillis();
+		
 		Map<String, Integer> map = new HashMap<>();
 		String regex = "[A-Za-z]+";
 		try(MyScanner scan = MyScannerFactory.makeMyScanner("shakespeare.txt", regex)){
@@ -191,6 +194,7 @@ public class H0516 {
 				Arrays.sort(arr);
 			}
 			
+			System.out.println(System.currentTimeMillis() - time + "ms\nresult: ");
 			System.out.println(Arrays.toString(arr));
 		}
 
