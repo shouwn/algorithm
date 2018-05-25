@@ -190,8 +190,15 @@ public class H0516 {
 					if(arr[0].compareTo(temp) < 0)
 						arr[0] = temp.getCopy();
 				}
+				else {
+					arr[index].countUp();
+					if(index < 9 && arr[index].compareTo(arr[index + 1]) > 0) {
+						WordInfo tmp = arr[index];
+						arr[index] = arr[index + 1];
+						arr[index + 1] = tmp;
+					}
+				}
 				
-				Arrays.sort(arr);
 			}
 			
 			System.out.println(System.currentTimeMillis() - time + "ms\nresult: ");
