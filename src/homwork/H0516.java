@@ -5,16 +5,29 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class WordInfo {
+class WordInfo implements Comparable<WordInfo>{
 	String word;
 	int count;
+	
+	public void setWord(String word) {
+		this.word = word;
+	}
+	
+	public void setCount(int count) {
+		this.count = count;
+	}
+	
+	public WordInfo getCopy() {
+		WordInfo info = new WordInfo(word);
+		info.setCount(this.count);
+		return info;
+	}
 
 	public WordInfo(String word) {
 		this.word = word;
@@ -29,11 +42,11 @@ class WordInfo {
 		return count;
 	}
 
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + count;
 		result = prime * result + ((word == null) ? 0 : word.hashCode());
 		return result;
 	}
@@ -47,8 +60,6 @@ class WordInfo {
 		if (getClass() != obj.getClass())
 			return false;
 		WordInfo other = (WordInfo) obj;
-		if (count != other.count)
-			return false;
 		if (word == null) {
 			if (other.word != null)
 				return false;
@@ -57,6 +68,15 @@ class WordInfo {
 		return true;
 	}
 
+	@Override
+	public int compareTo(WordInfo o) {
+		return this.count - o.count;
+	}
+
+	@Override
+	public String toString() {
+		return "[word=" + word + ", count=" + count + "]";
+	}
 }
 
 // 정규식을 세팅하면 그 정규식에 맞는 다음 문자열을 찾는 클래스
@@ -121,22 +141,66 @@ class MyScannerFactory{
 
 public class H0516 {
 
-	List<WordInfo> letterList = new ArrayList<>();
-	Map<WordInfo, Integer> letterMap = new HashMap<>();
-
 	public static void main(String[] args) throws IOException {
-		scanTxt();
+		solution1();
 	}
 
 	public static void solution1() throws FileNotFoundException, IOException {
+		Map<String, Integer> map = new HashMap<>();
+		String regex = "[A-Za-z]+";
+		try(MyScanner scan = MyScannerFactory.makeMyScanner("shakespeare.txt", regex)){
+			WordInfo[] arr = new WordInfo[10];
+			WordInfo temp = new WordInfo("");
+			int count = 0;
+			int index;
+			
+			while(count < 10 && scan.find()) {
+				String s = scan.read().toLowerCase();
+				
+				if(map.containsKey(s))
+					map.put(s, map.get(s) + 1);
+				else
+					map.put(s, 1);
+				
+				temp.setWord(s);
+				
+				if((index = contains(arr, temp)) != -1)
+					arr[index].countUp();
+				else
+					arr[count++] = new WordInfo(s);
+			}
+			
+			Arrays.sort(arr); // 0번째 인덱스의 값이 제일 작음
+
+			while(scan.find()) {
+				String s = scan.read().toLowerCase();
+
+				if(map.containsKey(s))
+					map.put(s, map.get(s) + 1);
+				else
+					map.put(s, 1);
+				
+				temp.setWord(s);
+				temp.setCount(map.get(s));
+				
+				if((index = contains(arr, temp)) == -1) {
+					if(arr[0].compareTo(temp) < 0)
+						arr[0] = temp.getCopy();
+				}
+				
+				Arrays.sort(arr);
+			}
+			
+			System.out.println(Arrays.toString(arr));
+		}
 
 	}
 
-	public static void solution2() throws FileNotFoundException, IOException {
+	public static void solution2() {
 
 	}
 
-	public static void solution3() throws FileNotFoundException, IOException {
+	public static void solution3() {
 
 	}
 
@@ -150,14 +214,22 @@ public class H0516 {
 		}
 	}
 
-	public static int getMin(int[] arr) {
-		int min = arr[0];
+	public static int getMinIndex(String[] arr, Map<String, Integer> map) {
+		int min = 0;
 		for(int i = 1; i < arr.length; i++) {
-			if(min > arr[i])
-				min = arr[i];
+			if(map.get(arr[min]) > map.get(arr[i]))
+				min = i;
 		}
 
 		return min;
 	}
-
+	
+	public static <T> int contains(T[] arr, T s) {
+		for(int i = 0; i < arr.length; i++) {
+			if(s.equals(arr[i]))
+				return i;
+		}
+		
+		return -1;
+	}
 }
