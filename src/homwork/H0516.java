@@ -7,7 +7,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -143,10 +146,19 @@ public class H0516 {
 
 	public static void main(String[] args) throws IOException {
 		solution1();
+		Set<Integer> set = new HashSet<>();
+		while(set.size() != 20) {
+			int i = new Random().nextInt(20);
+			
+			if(!set.contains(i))
+				System.out.print(i + " ");
+				
+			set.add(i);
+		}
 	}
 
 	public static void solution1() throws FileNotFoundException, IOException {
-		System.out.print("solution1: ");
+		System.out.println("solution1: ");
 		long time = System.currentTimeMillis();
 		
 		Map<String, Integer> map = new HashMap<>();
@@ -201,8 +213,8 @@ public class H0516 {
 				
 			}
 			
-			System.out.println(System.currentTimeMillis() - time + "ms\nresult: ");
-			System.out.println(Arrays.toString(arr));
+			System.out.println("result: " + Arrays.toString(arr));
+			System.out.println(System.currentTimeMillis() - time + "ms");
 		}
 
 	}
