@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -184,7 +185,7 @@ public class Q2 {
 	}
 
 	public static List<Line> scanLine() throws FileNotFoundException, IOException{
-		List<Line> lines = new ArrayList<>();
+		List<Line> lines = new LinkedList<>();
 
 		try(MyScanner scan = MyScannerFactory.makeMyScanner("[0-9]+")){
 

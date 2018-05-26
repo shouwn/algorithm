@@ -5,9 +5,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -155,6 +159,32 @@ public class H0516 {
 				
 			set.add(i);
 		}
+		
+		List<Integer> arrList = new ArrayList<>();
+		List<Integer> linkedList = new LinkedList<>();
+		for(int i = 0; i < 100000; i++) {
+			arrList.add(i);
+			linkedList.add(i);
+		}
+		
+		Iterator<Integer> iterArr = arrList.iterator();
+		Iterator<Integer> iterLink = linkedList.iterator();
+		
+		long time = System.currentTimeMillis();
+		while(iterArr.hasNext()) {
+			int i = iterArr.next();
+			if(i % 2 == 0)
+				iterArr.remove();
+		}
+		System.out.println("ArrayList: " + (System.currentTimeMillis() - time) + "ms");
+		
+		time = System.currentTimeMillis();
+		while(iterLink.hasNext()) {
+			int i = iterLink.next();
+			if(i % 2 == 0)
+				iterLink.remove();
+		}
+		System.out.println("LinkedList: " + (System.currentTimeMillis() - time) + "ms");
 	}
 
 	public static void solution1() throws FileNotFoundException, IOException {
