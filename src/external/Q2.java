@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 public class Q2 {
 
 	static Set<Integer> set = new TreeSet<>();
+	static long time;
 
 	static class Dot{
 		int position;
@@ -165,8 +166,12 @@ public class Q2 {
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		
+		solution();
+	}
+	
+	public static void solution() throws FileNotFoundException, IOException {
 		List<Line> lines = scanLine();
-
+		
 		set.add(Integer.MIN_VALUE);
 		set.add(Integer.MAX_VALUE);
 
@@ -179,19 +184,21 @@ public class Q2 {
 		}
 		
 		List<String> resultStr = step2(result);
+		result = null;
 		StringBuilder s = new StringBuilder();
 		for(String str : resultStr) 
 			s.append(str).append("\n");
 		
 		System.out.println(s);
-		
+		System.out.println(System.currentTimeMillis() - time + "ms");
 	}
 
 	public static List<Line> scanLine() throws FileNotFoundException, IOException{
 		List<Line> lines = new LinkedList<>();
 
 		try(MyScanner scan = MyScannerFactory.makeMyScanner("[0-9]+")){
-
+			scan.find();
+			time = System.currentTimeMillis();
 			scan.find();
 			int count = scan.read();
 
