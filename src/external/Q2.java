@@ -53,16 +53,18 @@ public class Q2 {
 		@Override
 		public String toString() {
 			StringBuilder str = new StringBuilder();
-			if(left.isInclude())
-				str.append("[");
-			else
-				str.append("(");
-
-			if(left.position == Integer.MIN_VALUE)
-				str.append("-, ");
-			else
+			if(left.position == Integer.MIN_VALUE) {
+				str.append("(-, ");
+			}
+			else {
+				if(left.isInclude())
+					str.append("[");
+				else
+					str.append("(");
+				
 				str.append(left.getPosition() + ", ");
-
+			}
+			
 			if(right.position == Integer.MAX_VALUE)
 				str.append("+");
 			else
@@ -88,7 +90,7 @@ public class Q2 {
 			Line line = iter.next();
 			int lineLeft = line.left.position;
 			int lineRight = line.right.position;
-			
+
 			if(lineLeft <= left && lineRight >= right) {
 				count++;
 				leftCount++;
@@ -120,7 +122,7 @@ public class Q2 {
 		boolean back = false;
 		Line temp = new Line(null, null);
 		Line line = null;
-		
+
 		Iterator<Line> iter = lines.iterator();
 		while(iter.hasNext()) {
 			line = iter.next();
@@ -164,18 +166,18 @@ public class Q2 {
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		List<Line> lines = scanLine();
 		System.out.println(lines);
-		
+
 		set.add(Integer.MIN_VALUE);
 		set.add(Integer.MAX_VALUE);
 
 		Integer[] dots = set.toArray(new Integer[0]);
 		set = null;
 		List<Line> result = new ArrayList<>();
-		
+
 		for(int i = 0; i < dots.length - 1; i++) {
 			result.add(step1(lines, dots[i], dots[i + 1]));
 		}
-		result.get(0).left.setInclude(false);
+		
 		List<String> resultStr = step2(result);
 		System.out.println(result);
 
