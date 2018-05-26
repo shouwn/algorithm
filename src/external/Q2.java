@@ -66,15 +66,15 @@ public class Q2 {
 			}
 			
 			if(right.position == Integer.MAX_VALUE)
-				str.append("+");
-			else
+				str.append("+)");
+			else {
 				str.append(right.getPosition());
-
-			if(right.isInclude())
-				str.append("]");
-			else
-				str.append(")");
-
+				
+				if(right.isInclude())
+					str.append("]");
+				else
+					str.append(")");
+			}
 
 			return str.toString();
 		}
@@ -145,7 +145,7 @@ public class Q2 {
 						back = true;
 					}
 				}
-				else if(line.left == line.left){
+				else if(line.left == line.right){
 					temp.right = line.left;
 					result.add(temp.toString());
 					back = false;
@@ -164,8 +164,8 @@ public class Q2 {
 	}
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
+		
 		List<Line> lines = scanLine();
-		System.out.println(lines);
 
 		set.add(Integer.MIN_VALUE);
 		set.add(Integer.MAX_VALUE);
@@ -179,11 +179,12 @@ public class Q2 {
 		}
 		
 		List<String> resultStr = step2(result);
-		System.out.println(result);
-
-		for(String str : resultStr) {
-			System.out.println(str);
-		}
+		StringBuilder s = new StringBuilder();
+		for(String str : resultStr) 
+			s.append(str).append("\n");
+		
+		System.out.println(s);
+		
 	}
 
 	public static List<Line> scanLine() throws FileNotFoundException, IOException{
