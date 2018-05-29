@@ -12,13 +12,10 @@ public class CyclicRotation {
 		
 		if(A.length == 0)
 			return A;
+		if(K == 0)
+			return A;
 		
-		int front = 0;
-		int rear = A.length - 1;
-		
-		front = (front + K) % A.length;
-		rear = (rear + K) % A.length;
-		
+		int front = K % A.length;
 		int[] result = new int[A.length];
 		
 		for(int i = 0; i < A.length; i++) {

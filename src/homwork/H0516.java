@@ -21,15 +21,20 @@ import java.util.regex.Pattern;
 class WordInfo implements Comparable<WordInfo>{
 	String word;
 	int count;
-	
+	int wordNumber;
+
 	public void setWord(String word) {
 		this.word = word;
 	}
 	
+	public String getWord() {
+		return word;
+	}
+
 	public void setCount(int count) {
 		this.count = count;
 	}
-	
+
 	public WordInfo getCopy() {
 		WordInfo info = new WordInfo(word);
 		info.setCount(this.count);
@@ -40,6 +45,13 @@ class WordInfo implements Comparable<WordInfo>{
 		this.word = word;
 		this.count = 1;
 	}
+	
+	private int stringToNumber(String s) {
+		int number = 0;
+		for(char c : s.toCharArray())
+			number += c;
+		return number;
+	}
 
 	public void countUp() {
 		count++;
@@ -48,7 +60,6 @@ class WordInfo implements Comparable<WordInfo>{
 	public int getCount() {
 		return count;
 	}
-
 
 	@Override
 	public int hashCode() {
@@ -153,23 +164,23 @@ public class H0516 {
 		Set<Integer> set = new HashSet<>();
 		while(set.size() != 20) {
 			int i = new Random().nextInt(20);
-			
+
 			if(!set.contains(i))
 				System.out.print(i + " ");
-				
+
 			set.add(i);
 		}
-		
+
 		List<Integer> arrList = new ArrayList<>();
 		List<Integer> linkedList = new LinkedList<>();
 		for(int i = 0; i < 100000; i++) {
 			arrList.add(i);
 			linkedList.add(i);
 		}
-		
+
 		Iterator<Integer> iterArr = arrList.iterator();
 		Iterator<Integer> iterLink = linkedList.iterator();
-		
+
 		long time = System.currentTimeMillis();
 		while(iterArr.hasNext()) {
 			int i = iterArr.next();
@@ -177,7 +188,7 @@ public class H0516 {
 				iterArr.remove();
 		}
 		System.out.println("ArrayList: " + (System.currentTimeMillis() - time) + "ms");
-		
+
 		time = System.currentTimeMillis();
 		while(iterLink.hasNext()) {
 			int i = iterLink.next();
@@ -190,7 +201,7 @@ public class H0516 {
 	public static void solution1() throws FileNotFoundException, IOException {
 		System.out.println("solution1: ");
 		long time = System.currentTimeMillis();
-		
+
 		Map<String, Integer> map = new HashMap<>();
 		String regex = "[A-Za-z]+";
 		try(MyScanner scan = MyScannerFactory.makeMyScanner("shakespeare.txt", regex)){
@@ -198,23 +209,23 @@ public class H0516 {
 			WordInfo temp = new WordInfo("");
 			int count = 0;
 			int index;
-			
+
 			while(count < 10 && scan.find()) {
 				String s = scan.read().toLowerCase();
-				
+
 				if(map.containsKey(s))
 					map.put(s, map.get(s) + 1);
 				else
 					map.put(s, 1);
-				
+
 				temp.setWord(s);
-				
+
 				if((index = contains(arr, temp)) != -1)
 					arr[index].countUp();
 				else
 					arr[count++] = new WordInfo(s);
 			}
-			
+
 			Arrays.sort(arr); // 0번째 인덱스의 값이 제일 작음
 
 			while(scan.find()) {
@@ -224,10 +235,10 @@ public class H0516 {
 					map.put(s, map.get(s) + 1);
 				else
 					map.put(s, 1);
-				
+
 				temp.setWord(s);
 				temp.setCount(map.get(s));
-				
+
 				if((index = contains(arr, temp)) == -1) {
 					if(arr[0].compareTo(temp) < 0)
 						arr[0] = temp.getCopy();
@@ -240,21 +251,48 @@ public class H0516 {
 						arr[index + 1] = tmp;
 					}
 				}
-				
+
 			}
-			
+
 			System.out.println("result: " + Arrays.toString(arr));
 			System.out.println(System.currentTimeMillis() - time + "ms");
 		}
 
 	}
 
-	public static void solution2() {
+	public static void solution2() throws FileNotFoundException, IOException {
+		System.out.println("solution2: ");
+		long time = System.currentTimeMillis();
 
+		
+		String regex = "[A-Za-z]+";
+		try(MyScanner scan = MyScannerFactory.makeMyScanner("shakespeare.txt", regex)){
+			
+			System.out.println(System.currentTimeMillis() - time + "ms");
+		}
 	}
 
 	public static void solution3() {
 
+	}
+	
+	public static int findIndex(List<WordInfo> list, String word) {
+		
+	}
+	
+	public static int findIndex(List<WordInfo> list, String word, int start, int end) {
+		int middle = (start + end) / 2;
+		
+		if(list.get(middle).getWord().equals(word))
+			return middle;
+		else if(stringToNumber(word)
+	}
+	
+	public static int stringToNumber(String s) {
+		int number = 0;
+		for(char c : s.toCharArray())
+			number += c;
+		return number;
 	}
 
 	public static void scanTxt() throws FileNotFoundException, IOException{
@@ -276,13 +314,13 @@ public class H0516 {
 
 		return min;
 	}
-	
+
 	public static <T> int contains(T[] arr, T s) {
 		for(int i = 0; i < arr.length; i++) {
 			if(s.equals(arr[i]))
 				return i;
 		}
-		
+
 		return -1;
 	}
 }
