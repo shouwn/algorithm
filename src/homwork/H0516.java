@@ -8,13 +8,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,11 +22,11 @@ class WordInfo implements Comparable<WordInfo>{
 		this.word = word;
 		this.wordNumber = stringToNumber(word);
 	}
-	
+
 	public String getWord() {
 		return word;
 	}
-	
+
 	public int getWordNumber() {
 		return wordNumber;
 	}
@@ -50,8 +45,8 @@ class WordInfo implements Comparable<WordInfo>{
 		this.word = word;
 		this.count = 1;
 	}
-	
-	private int stringToNumber(String s) {
+
+	public static int stringToNumber(String s) {
 		int number = 0;
 		for(char c : s.toCharArray())
 			number += c;
@@ -166,41 +161,8 @@ public class H0516 {
 
 	public static void main(String[] args) throws IOException {
 		solution1();
-		Set<Integer> set = new HashSet<>();
-		while(set.size() != 20) {
-			int i = new Random().nextInt(20);
-
-			if(!set.contains(i))
-				System.out.print(i + " ");
-
-			set.add(i);
-		}
-
-		List<Integer> arrList = new ArrayList<>();
-		List<Integer> linkedList = new LinkedList<>();
-		for(int i = 0; i < 100000; i++) {
-			arrList.add(i);
-			linkedList.add(i);
-		}
-
-		Iterator<Integer> iterArr = arrList.iterator();
-		Iterator<Integer> iterLink = linkedList.iterator();
-
-		long time = System.currentTimeMillis();
-		while(iterArr.hasNext()) {
-			int i = iterArr.next();
-			if(i % 2 == 0)
-				iterArr.remove();
-		}
-		System.out.println("ArrayList: " + (System.currentTimeMillis() - time) + "ms");
-
-		time = System.currentTimeMillis();
-		while(iterLink.hasNext()) {
-			int i = iterLink.next();
-			if(i % 2 == 0)
-				iterLink.remove();
-		}
-		System.out.println("LinkedList: " + (System.currentTimeMillis() - time) + "ms");
+		solution3();
+		solution2();
 	}
 
 	public static void solution1() throws FileNotFoundException, IOException {
@@ -266,13 +228,13 @@ public class H0516 {
 	}
 
 	public static void solution2() throws FileNotFoundException, IOException {
-		System.out.println("solution2: ");
+		System.out.println("solution2: //10초 정도 걸림");
 		long time = System.currentTimeMillis();
 
 		List<WordInfo> list = new ArrayList<>();
 		String regex = "[A-Za-z]+";
 		try(MyScanner scan = MyScannerFactory.makeMyScanner("shakespeare.txt", regex)){
-			
+
 			WordInfo[] arr = new WordInfo[10];
 			WordInfo temp;
 			int count = 0;
@@ -281,7 +243,7 @@ public class H0516 {
 			while(count < 10 && scan.find()) {
 				String word = scan.read().toLowerCase();
 
-				temp = insert(list, word);
+				temp = insertLinear(list, word);
 
 				if((index = contains(arr, temp)) == -1)
 					arr[count++] = temp;
@@ -291,8 +253,8 @@ public class H0516 {
 
 			while(scan.find()) {
 				String word = scan.read().toLowerCase();
-				
-				temp = insert(list, word);
+
+				temp = insertLinear(list, word);
 
 				if((index = contains(arr, temp)) == -1) {
 					if(arr[0].compareTo(temp) < 0)
@@ -312,69 +274,148 @@ public class H0516 {
 		}
 	}
 
-	public static void solution3() {
+	public static void solution3() throws FileNotFoundException, IOException {
+		System.out.println("solution3: ");
+		long time = System.currentTimeMillis();
 
-	}
-	
-	public static WordInfo insert(List<WordInfo> list, String word) {
-		
-	}
-	
-	public static int findInsertIndex(List<WordInfo> list, String word, int start, int end) {
+		List<WordInfo> list = new ArrayList<>();
+		String regex = "[A-Za-z]+";
+		try(MyScanner scan = MyScannerFactory.makeMyScanner("shakespeare.txt", regex)){
 
-		int wordNumber = stringToNumber(word);
-		if(end - start <= 2) {
+			WordInfo[] arr = new WordInfo[10];
+			WordInfo temp;
+			int count = 0;
+			int index;
 			
-			WordInfo endInfo = list.get(end);
+			scan.find();
+			list.add(new WordInfo(scan.read().toLowerCase()));
+			arr[count++] = list.get(0);
+
+			while(count < 10 && scan.find()) {
+				String word = scan.read().toLowerCase();
+
+				temp = insertBinary(list, word);
+
+				if((index = contains(arr, temp)) == -1)
+					arr[count++] = temp;
+			}
 			
-			if(start == end) {
-				if(endInfo.getWordNumber() == wordNumber)
-				
-				if(endInfo.getWordNumber() > wordNumber) 
-					return end - 1;
-				else
-					
+			Arrays.sort(arr); // 0번째 인덱스의 값이 제일 작음
+
+			while(scan.find()) {
+				String word = scan.read().toLowerCase();
+
+				temp = insertBinary(list, word);
+
+				if((index = contains(arr, temp)) == -1) {
+					if(arr[0].compareTo(temp) < 0)
+						arr[0] = temp;
+				}
+				else {
+					if(index < 9 && arr[index].compareTo(arr[index + 1]) > 0) {
+						WordInfo tmp = arr[index];
+						arr[index] = arr[index + 1];
+						arr[index + 1] = tmp;
+					}
+				}
+
+			}
+			System.out.println(Arrays.toString(arr));
+			System.out.println(System.currentTimeMillis() - time + "ms");
+		}
+	}
+
+	public static WordInfo insertLinear(List<WordInfo> list, String word) {
+		for(int i = 0; i < list.size() - 1; i++) {
+			WordInfo info = list.get(i);
+			if(info.word.equals(word)) {
+				info.countUp();
+				return info;
 			}
 		}
+
+		WordInfo info = new WordInfo(word);
+		list.add(info);
+		return info;
+	}
+	
+	public static WordInfo insertBinary(List<WordInfo> list, String word) {
+		return list.get(insertBinary(list, word, 0, list.size() - 1));
+	}
+///
+	///ㄷ
+	////ㄱ
+	////ㅅ///ㅇ//ㄹ//ㅎㄹ/ㄹ/ㅎ/ㄶ/ㄷ//ㅅㅎㅈ/ㅅㄷ//ㅅㅈㄷ/ㅅ/ㅈㄷ
+	public static int insertBinary(List<WordInfo> list, String word, int start, int end) {
+		if(start == list.size()) {
+			list.add(new WordInfo(word));
+			return list.size() - 1;
+		}
 		
+		if(start > end) {
+			WordInfo info = list.get(start);
+			int wordNumber = WordInfo.stringToNumber(word);
+			
+			if(info.word.hashCode() > word.hashCode())
+				return insertForLoop(list, word, start);
+			else {
+				int i;
+				for(i = start; i < list.size(); i++) {
+					WordInfo cur = list.get(i);
+					if(cur.word.hashCode() > info.word.hashCode()) {
+						list.add(i, new WordInfo(word));
+						return i;
+					}
+				}
+				list.add(i, new WordInfo(word));
+				return i;
+			}
+		}
+
 		int middle = (start + end) / 2;
-		
+
 		WordInfo info = list.get(middle);
-		
-		if(info.getWord().equals(word))
-			return middle;
-		else if(info.getWordNumber() < wordNumber) 
-			return findInsertIndex(list, word, start, middle - 1);
+		int wordNumber = WordInfo.stringToNumber(word);
+
+		if(info.word.hashCode() == word.hashCode()) {
+			return insertForLoop(list, word, middle);
+		}
+		else if(info.word.hashCode() < word.hashCode()) 
+			return insertBinary(list, word, start, middle - 1);
 		else
-			return findInsertIndex(list, word, middle + 1, end);
+			return insertBinary(list, word, middle + 1, end);
 	}
-	
-	public static int findIndex(List<WordInfo> list, String word) {
-		return findIndex(list, word, 0, list.size() - 1);
-	}
-	
-	public static int findIndex(List<WordInfo> list, String word, int start, int end) {
-		if(start > end)
-			return -1;
-		
-		int middle = (start + end) / 2;
-		
-		WordInfo info = list.get(middle);
-		int wordNumber = stringToNumber(word);
-		
-		if(info.getWord().equals(word))
-			return middle;
-		else if(info.getWordNumber() < wordNumber) 
-			return findIndex(list, word, start, middle - 1);
-		else
-			return findIndex(list, word, middle + 1, end);
-	}
-	
-	public static int stringToNumber(String s) {
-		int number = 0;
-		for(char c : s.toCharArray())
-			number += c;
-		return number;
+
+	public static int insertForLoop(List<WordInfo> list, String word, int index) {
+		int i;
+		for(i = index; i < list.size() - 1; i++) {
+			WordInfo cur = list.get(i);
+			WordInfo next = list.get(i + 1);
+			if(cur.word.hashCode() != next.word.hashCode())
+				break;
+		}
+		for(; i > 0; i--) {
+			WordInfo cur = list.get(i);
+			WordInfo next = list.get(i - 1);
+			if(cur.word.equals(word)) {
+				cur.countUp();
+				break;
+			}
+			else if(cur.word.hashCode() != next.word.hashCode()) {
+				list.add(i, new WordInfo(word));
+				break;
+			}
+		}
+
+		if(i == 0) {
+			if(list.get(i).word.equals(word)) 
+				list.get(i).countUp();
+			else 
+				list.add(i, new WordInfo(word));
+		}
+
+		return i;
+
 	}
 
 	public static void scanTxt() throws FileNotFoundException, IOException{
