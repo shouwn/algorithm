@@ -16,19 +16,13 @@ import java.util.regex.Pattern;
 class WordInfo implements Comparable<WordInfo>{
 	String word;
 	int count;
-	int wordNumber;
 
 	public void setWord(String word) {
 		this.word = word;
-		this.wordNumber = stringToNumber(word);
 	}
 
 	public String getWord() {
 		return word;
-	}
-
-	public int getWordNumber() {
-		return wordNumber;
 	}
 
 	public void setCount(int count) {
@@ -44,13 +38,6 @@ class WordInfo implements Comparable<WordInfo>{
 	public WordInfo(String word) {
 		this.word = word;
 		this.count = 1;
-	}
-
-	public static int stringToNumber(String s) {
-		int number = 0;
-		for(char c : s.toCharArray())
-			number += c;
-		return number;
 	}
 
 	public void countUp() {
@@ -342,100 +329,27 @@ public class H0516 {
 	public static WordInfo insertBinary(List<WordInfo> list, String word) {
 		return list.get(insertBinary(list, word, 0, list.size() - 1));
 	}
-///
-	///ㄷ
-	////ㄱ
-	////ㅅ///ㅇ//ㄹ//ㅎㄹ/ㄹ/ㅎ/ㄶ/ㄷ//ㅅㅎㅈ/ㅅㄷ//ㅅㅈㄷ/ㅅ/ㅈㄷ
+	
 	public static int insertBinary(List<WordInfo> list, String word, int start, int end) {
-		if(start == list.size()) {
-			list.add(new WordInfo(word));
-			return list.size() - 1;
-		}
-		
+
 		if(start > end) {
-			WordInfo info = list.get(start);
-			int wordNumber = WordInfo.stringToNumber(word);
-			
-			if(info.word.hashCode() > word.hashCode())
-				return insertForLoop(list, word, start);
-			else {
-				int i;
-				for(i = start; i < list.size(); i++) {
-					WordInfo cur = list.get(i);
-					if(cur.word.hashCode() > info.word.hashCode()) {
-						list.add(i, new WordInfo(word));
-						return i;
-					}
-				}
-				list.add(i, new WordInfo(word));
-				return i;
-			}
+			list.add(start, new WordInfo(word));
+			return start;
 		}
 
 		int middle = (start + end) / 2;
 
 		WordInfo info = list.get(middle);
-		int wordNumber = WordInfo.stringToNumber(word);
+		int compare = info.word.compareTo(word);
 
-		if(info.word.hashCode() == word.hashCode()) {
-			return insertForLoop(list, word, middle);
+		if(compare == 0) {
+			info.countUp();
+			return middle;
 		}
-		else if(info.word.hashCode() < word.hashCode()) 
+		else if(compare < 0) 
 			return insertBinary(list, word, start, middle - 1);
 		else
 			return insertBinary(list, word, middle + 1, end);
-	}
-
-	public static int insertForLoop(List<WordInfo> list, String word, int index) {
-		int i;
-		for(i = index; i < list.size() - 1; i++) {
-			WordInfo cur = list.get(i);
-			WordInfo next = list.get(i + 1);
-			if(cur.word.hashCode() != next.word.hashCode())
-				break;
-		}
-		for(; i > 0; i--) {
-			WordInfo cur = list.get(i);
-			WordInfo next = list.get(i - 1);
-			if(cur.word.equals(word)) {
-				cur.countUp();
-				break;
-			}
-			else if(cur.word.hashCode() != next.word.hashCode()) {
-				list.add(i, new WordInfo(word));
-				break;
-			}
-		}
-
-		if(i == 0) {
-			if(list.get(i).word.equals(word)) 
-				list.get(i).countUp();
-			else 
-				list.add(i, new WordInfo(word));
-		}
-
-		return i;
-
-	}
-
-	public static void scanTxt() throws FileNotFoundException, IOException{
-		String regex = "[A-Za-z]+";
-		try(MyScanner scan = MyScannerFactory.makeMyScanner("shakespeare.txt", regex)){
-
-			while(scan.find()) {
-				System.out.println(scan.read());
-			}
-		}
-	}
-
-	public static int getMinIndex(String[] arr, Map<String, Integer> map) {
-		int min = 0;
-		for(int i = 1; i < arr.length; i++) {
-			if(map.get(arr[min]) > map.get(arr[i]))
-				min = i;
-		}
-
-		return min;
 	}
 
 	public static <T> int contains(T[] arr, T s) {
