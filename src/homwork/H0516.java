@@ -25,10 +25,15 @@ class WordInfo implements Comparable<WordInfo>{
 
 	public void setWord(String word) {
 		this.word = word;
+		this.wordNumber = stringToNumber(word);
 	}
 	
 	public String getWord() {
 		return word;
+	}
+	
+	public int getWordNumber() {
+		return wordNumber;
 	}
 
 	public void setCount(int count) {
@@ -264,9 +269,17 @@ public class H0516 {
 		System.out.println("solution2: ");
 		long time = System.currentTimeMillis();
 
-		
+		List<WordInfo> list = new ArrayList<>();
 		String regex = "[A-Za-z]+";
 		try(MyScanner scan = MyScannerFactory.makeMyScanner("shakespeare.txt", regex)){
+			
+			scan.find();
+			int index;
+			String word;
+			
+			while((word = scan.read()) != null){
+				if((index = findIndex(list, scan.read())) != -1)
+			}
 			
 			System.out.println(System.currentTimeMillis() - time + "ms");
 		}
@@ -277,15 +290,24 @@ public class H0516 {
 	}
 	
 	public static int findIndex(List<WordInfo> list, String word) {
-		
+		return findIndex(list, word, 0, list.size() - 1);
 	}
 	
 	public static int findIndex(List<WordInfo> list, String word, int start, int end) {
+		if(start > end)
+			return -1;
+		
 		int middle = (start + end) / 2;
 		
-		if(list.get(middle).getWord().equals(word))
+		WordInfo info = list.get(middle);
+		int wordNumber = stringToNumber(word);
+		
+		if(info.getWord().equals(word))
 			return middle;
-		else if(stringToNumber(word)
+		else if(info.getWordNumber() < wordNumber) 
+			return findIndex(list, word, start, middle - 1);
+		else
+			return findIndex(list, word, middle + 1, end);
 	}
 	
 	public static int stringToNumber(String s) {
