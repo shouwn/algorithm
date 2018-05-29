@@ -159,6 +159,7 @@ public class H0516 {
 				
 			set.add(i);
 		}
+		System.out.println();
 		
 		List<Integer> arrList = new ArrayList<>();
 		List<Integer> linkedList = new LinkedList<>();
