@@ -273,20 +273,80 @@ public class H0516 {
 		String regex = "[A-Za-z]+";
 		try(MyScanner scan = MyScannerFactory.makeMyScanner("shakespeare.txt", regex)){
 			
-			scan.find();
+			WordInfo[] arr = new WordInfo[10];
+			WordInfo temp;
+			int count = 0;
 			int index;
-			String word;
-			
-			while((word = scan.read()) != null){
-				if((index = findIndex(list, scan.read())) != -1)
+
+			while(count < 10 && scan.find()) {
+				String word = scan.read().toLowerCase();
+
+				temp = insert(list, word);
+
+				if((index = contains(arr, temp)) == -1)
+					arr[count++] = temp;
 			}
-			
+
+			Arrays.sort(arr); // 0번째 인덱스의 값이 제일 작음
+
+			while(scan.find()) {
+				String word = scan.read().toLowerCase();
+				
+				temp = insert(list, word);
+
+				if((index = contains(arr, temp)) == -1) {
+					if(arr[0].compareTo(temp) < 0)
+						arr[0] = temp;
+				}
+				else {
+					if(index < 9 && arr[index].compareTo(arr[index + 1]) > 0) {
+						WordInfo tmp = arr[index];
+						arr[index] = arr[index + 1];
+						arr[index + 1] = tmp;
+					}
+				}
+
+			}
+			System.out.println(Arrays.toString(arr));
 			System.out.println(System.currentTimeMillis() - time + "ms");
 		}
 	}
 
 	public static void solution3() {
 
+	}
+	
+	public static WordInfo insert(List<WordInfo> list, String word) {
+		
+	}
+	
+	public static int findInsertIndex(List<WordInfo> list, String word, int start, int end) {
+
+		int wordNumber = stringToNumber(word);
+		if(end - start <= 2) {
+			
+			WordInfo endInfo = list.get(end);
+			
+			if(start == end) {
+				if(endInfo.getWordNumber() == wordNumber)
+				
+				if(endInfo.getWordNumber() > wordNumber) 
+					return end - 1;
+				else
+					
+			}
+		}
+		
+		int middle = (start + end) / 2;
+		
+		WordInfo info = list.get(middle);
+		
+		if(info.getWord().equals(word))
+			return middle;
+		else if(info.getWordNumber() < wordNumber) 
+			return findInsertIndex(list, word, start, middle - 1);
+		else
+			return findInsertIndex(list, word, middle + 1, end);
 	}
 	
 	public static int findIndex(List<WordInfo> list, String word) {
