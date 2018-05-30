@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,6 +82,22 @@ class WordInfo implements Comparable<WordInfo>{
 	@Override
 	public String toString() {
 		return "(" + word + ", " + count + ")";
+	}
+}
+
+class WordInfoComparatorByWord implements Comparator<WordInfo>{
+
+	@Override
+	public int compare(WordInfo o1, WordInfo o2) {
+		return o1.getWord().compareTo(o2.getWord());
+	}
+}
+
+class WordInfoComparatorByCount implements Comparator<WordInfo>{
+
+	@Override
+	public int compare(WordInfo o1, WordInfo o2) {
+		return o1.getCount() - o2.getCount();
 	}
 }
 
