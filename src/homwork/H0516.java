@@ -347,7 +347,7 @@ public class H0516 {
 		return list.get(insertBinary(list, word, 0, list.size() - 1));
 	}
 	
-	public static int insertBinary(List<WordInfo> list, String word, int start, int end) {
+	private static int insertBinary(List<WordInfo> list, String word, int start, int end) {
 
 		if(start > end) {
 			list.add(start, new WordInfo(word));
