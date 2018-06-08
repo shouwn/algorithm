@@ -101,67 +101,67 @@ class WordInfoComparatorByCount implements Comparator<WordInfo>{
 	}
 }
 
-// 정규식을 세팅하면 그 정규식에 맞는 다음 문자열을 찾는 클래스
-class MyScanner implements AutoCloseable{
-
-	private BufferedReader reader;
-	private String regex;
-	private Pattern pattern;
-	private Matcher matcher;
-
-	public void setReader(BufferedReader reader) {
-		this.reader = reader;
-	}
-	public void setRegex(String regex) throws IOException {
-		this.regex = regex;
-		pattern = Pattern.compile(this.regex);
-		matcher = pattern.matcher(reader.readLine());
-	}
-
-	// 정규식에 해당하는 문자열이 있는지 확인하는 메소드
-	public boolean find() throws IOException {
-		if(matcher.find()) {
-			return true;
-		}
-		else {
-			String line;
-			while(!matcher.find()) {
-				line = reader.readLine();
-				if(line == null)
-					return false;
-				matcher = pattern.matcher(line);
-			}
-
-			return true;
-		}
-	}
-
-	// 찾은 문자열을 return 해주는 메소드
-	public String read() throws IOException{
-
-		return matcher.group(0);
-	}
-
-	@Override
-	public void close() throws IOException {
-		reader.close();
-	}
-}
-
-class MyScannerFactory{
-	public static MyScanner makeMyScanner(String filePath, String regex) 
-			throws FileNotFoundException, IOException{
-
-		BufferedReader reader = 
-				new BufferedReader(new FileReader(new File(filePath)));
-		MyScanner scan = new MyScanner();
-		scan.setReader(reader);
-		scan.setRegex(regex);
-		return scan;
-	}
-}
-
 public class H0516 {
+	
+	// 정규식을 세팅하면 그 정규식에 맞는 다음 문자열을 찾는 클래스
+	static class MyScanner implements AutoCloseable{
+
+		private BufferedReader reader;
+		private String regex;
+		private Pattern pattern;
+		private Matcher matcher;
+
+		public void setReader(BufferedReader reader) {
+			this.reader = reader;
+		}
+		public void setRegex(String regex) throws IOException {
+			this.regex = regex;
+			pattern = Pattern.compile(this.regex);
+			matcher = pattern.matcher(reader.readLine());
+		}
+
+		// 정규식에 해당하는 문자열이 있는지 확인하는 메소드
+		public boolean find() throws IOException {
+			if(matcher.find()) {
+				return true;
+			}
+			else {
+				String line;
+				while(!matcher.find()) {
+					line = reader.readLine();
+					if(line == null)
+						return false;
+					matcher = pattern.matcher(line);
+				}
+
+				return true;
+			}
+		}
+
+		// 찾은 문자열을 return 해주는 메소드
+		public String read() throws IOException{
+
+			return matcher.group(0);
+		}
+
+		@Override
+		public void close() throws IOException {
+			reader.close();
+		}
+	}
+
+	static class MyScannerFactory{
+		public static MyScanner makeMyScanner(String filePath, String regex) 
+				throws FileNotFoundException, IOException{
+
+			BufferedReader reader = 
+					new BufferedReader(new FileReader(new File(filePath)));
+			MyScanner scan = new MyScanner();
+			scan.setReader(reader);
+			scan.setRegex(regex);
+			return scan;
+		}
+	}
 
 	public static void main(String[] args) throws IOException {
 		solution1();
