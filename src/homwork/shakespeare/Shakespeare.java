@@ -81,10 +81,9 @@ public class Shakespeare {
 
 			}
 
-			System.out.println("result: " + Arrays.toString(arr));
+			System.out.println(Arrays.toString(arr));
 			System.out.println(System.currentTimeMillis() - time + "ms");
 		}
-
 	}
 
 	public static void solution2() throws FileNotFoundException, IOException {
