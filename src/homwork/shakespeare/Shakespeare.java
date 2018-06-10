@@ -20,13 +20,42 @@ public class Shakespeare {
 	// 정규식을 세팅하면 그 정규식에 맞는 다음 문자열을 찾는 클래스
 
 	public static void main(String[] args) throws IOException {
-		solution1();
-		solution3();
-		solution2();
+		new Thread(() -> {
+			try {
+				solution1();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}).start();
+		
+		new Thread(() -> {
+			try {
+				solution3();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}).start();
+		
+		new Thread(() -> {
+			try {
+				solution2();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}).start();;
+	}
+	
+	public synchronized static void print(int n, WordInfo[] arr, long time) {
+
+		System.out.println("solution" + n + ": ");
+		System.out.println(Arrays.toString(arr));
+		System.out.println(System.currentTimeMillis() - time + "ms");
 	}
 
 	public static void solution1() throws FileNotFoundException, IOException {
-		System.out.println("solution1: ");
 		long time = System.currentTimeMillis();
 
 		Map<String, Integer> map = new HashMap<>();
@@ -80,14 +109,11 @@ public class Shakespeare {
 				}
 
 			}
-
-			System.out.println(Arrays.toString(arr));
-			System.out.println(System.currentTimeMillis() - time + "ms");
+			print(1, arr, time);
 		}
 	}
 
 	public static void solution2() throws FileNotFoundException, IOException {
-		System.out.println("solution2: //10초 정도 걸림");
 		long time = System.currentTimeMillis();
 
 		List<WordInfo> list = new ArrayList<>();
@@ -128,13 +154,11 @@ public class Shakespeare {
 				}
 
 			}
-			System.out.println(Arrays.toString(arr));
-			System.out.println(System.currentTimeMillis() - time + "ms");
+			print(2, arr, time);
 		}
 	}
 
 	public static void solution3() throws FileNotFoundException, IOException {
-		System.out.println("solution3: ");
 		long time = System.currentTimeMillis();
 
 		List<WordInfo> list = new ArrayList<>();
@@ -179,8 +203,7 @@ public class Shakespeare {
 				}
 
 			}
-			System.out.println(Arrays.toString(arr));
-			System.out.println(System.currentTimeMillis() - time + "ms");
+			print(3, arr, time);
 		}
 	}
 
