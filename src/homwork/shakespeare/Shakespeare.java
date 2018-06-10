@@ -1,167 +1,23 @@
-package homwork;
+package homwork.shakespeare;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-class WordInfo implements Comparable<WordInfo>{
-	String word;
-	int count;
+import homwork.utils.MyInsertion;
+import homwork.utils.MyScanner;
+import homwork.utils.MyScannerFactory;
 
-	public void setWord(String word) {
-		this.word = word;
-	}
-
-	public String getWord() {
-		return word;
-	}
-
-	public void setCount(int count) {
-		this.count = count;
-	}
-
-	public WordInfo getCopy() {
-		WordInfo info = new WordInfo(word);
-		info.setCount(this.count);
-		return info;
-	}
-
-	public WordInfo(String word) {
-		this.word = word;
-		this.count = 1;
-	}
-
-	public void countUp() {
-		count++;
-	}
-
-	public int getCount() {
-		return count;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((word == null) ? 0 : word.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		WordInfo other = (WordInfo) obj;
-		if (word == null) {
-			if (other.word != null)
-				return false;
-		} else if (!word.equals(other.word))
-			return false;
-		return true;
-	}
-
-	@Override
-	public int compareTo(WordInfo o) {
-		return this.count - o.count;
-	}
-
-	@Override
-	public String toString() {
-		return "(" + word + ", " + count + ")";
-	}
-}
-
-class WordInfoComparatorByWord implements Comparator<WordInfo>{
-
-	@Override
-	public int compare(WordInfo o1, WordInfo o2) {
-		return o1.getWord().compareTo(o2.getWord());
-	}
-}
-
-class WordInfoComparatorByCount implements Comparator<WordInfo>{
-
-	@Override
-	public int compare(WordInfo o1, WordInfo o2) {
-		return o1.getCount() - o2.getCount();
-	}
-}
-
-public class H0516 {
+public class Shakespeare {
+	
+	static WordInfoComparatorByCount comparatorByCount = new WordInfoComparatorByCount();
+	static WordInfoComparatorByWord comparatorByWord = new WordInfoComparatorByWord();
 	
 	// 정규식을 세팅하면 그 정규식에 맞는 다음 문자열을 찾는 클래스
-	static class MyScanner implements AutoCloseable{
-
-		private BufferedReader reader;
-		private String regex;
-		private Pattern pattern;
-		private Matcher matcher;
-
-		public void setReader(BufferedReader reader) {
-			this.reader = reader;
-		}
-		public void setRegex(String regex) throws IOException {
-			this.regex = regex;
-			pattern = Pattern.compile(this.regex);
-			matcher = pattern.matcher(reader.readLine());
-		}
-
-		// 정규식에 해당하는 문자열이 있는지 확인하는 메소드
-		public boolean find() throws IOException {
-			if(matcher.find()) {
-				return true;
-			}
-			else {
-				String line;
-				while(!matcher.find()) {
-					line = reader.readLine();
-					if(line == null)
-						return false;
-					matcher = pattern.matcher(line);
-				}
-
-				return true;
-			}
-		}
-
-		// 찾은 문자열을 return 해주는 메소드
-		public String read() throws IOException{
-
-			return matcher.group(0);
-		}
-
-		@Override
-		public void close() throws IOException {
-			reader.close();
-		}
-	}
-
-	static class MyScannerFactory{
-		public static MyScanner makeMyScanner(String filePath, String regex) 
-				throws FileNotFoundException, IOException{
-
-			BufferedReader reader = 
-					new BufferedReader(new FileReader(new File(filePath)));
-			MyScanner scan = new MyScanner();
-			scan.setReader(reader);
-			scan.setRegex(regex);
-			return scan;
-		}
-	}
 
 	public static void main(String[] args) throws IOException {
 		solution1();
@@ -197,7 +53,7 @@ public class H0516 {
 					arr[count++] = new WordInfo(s);
 			}
 
-			Arrays.sort(arr); // 0번째 인덱스의 값이 제일 작음
+			Arrays.sort(arr, comparatorByCount); // 0번째 인덱스의 값이 제일 작음
 
 			while(scan.find()) {
 				String s = scan.read().toLowerCase();
@@ -211,12 +67,12 @@ public class H0516 {
 				temp.setCount(map.get(s));
 
 				if((index = contains(arr, temp)) == -1) {
-					if(arr[0].compareTo(temp) < 0)
+					if(comparatorByCount.compare(arr[0], temp) < 0)
 						arr[0] = temp.getCopy();
 				}
 				else {
 					arr[index].countUp();
-					if(index < 9 && arr[index].compareTo(arr[index + 1]) > 0) {
+					if(index < 9 && comparatorByCount.compare(arr[index], arr[index + 1]) > 0) {
 						WordInfo tmp = arr[index];
 						arr[index] = arr[index + 1];
 						arr[index + 1] = tmp;
@@ -253,7 +109,7 @@ public class H0516 {
 					arr[count++] = temp;
 			}
 
-			Arrays.sort(arr); // 0번째 인덱스의 값이 제일 작음
+			Arrays.sort(arr, comparatorByCount); // 0번째 인덱스의 값이 제일 작음
 
 			while(scan.find()) {
 				String word = scan.read().toLowerCase();
@@ -261,11 +117,11 @@ public class H0516 {
 				temp = insertLinear(list, word);
 
 				if((index = contains(arr, temp)) == -1) {
-					if(arr[0].compareTo(temp) < 0)
+					if(comparatorByCount.compare(arr[0], temp) < 0)
 						arr[0] = temp;
 				}
 				else {
-					if(index < 9 && arr[index].compareTo(arr[index + 1]) > 0) {
+					if(index < 9 && comparatorByCount.compare(arr[index], arr[index + 1]) > 0) {
 						WordInfo tmp = arr[index];
 						arr[index] = arr[index + 1];
 						arr[index + 1] = tmp;
@@ -304,7 +160,7 @@ public class H0516 {
 					arr[count++] = temp;
 			}
 			
-			Arrays.sort(arr); // 0번째 인덱스의 값이 제일 작음
+			Arrays.sort(arr, comparatorByCount); // 0번째 인덱스의 값이 제일 작음
 
 			while(scan.find()) {
 				String word = scan.read().toLowerCase();
@@ -312,11 +168,11 @@ public class H0516 {
 				temp = insertBinary(list, word);
 
 				if((index = contains(arr, temp)) == -1) {
-					if(arr[0].compareTo(temp) < 0)
+					if(comparatorByCount.compare(arr[0], temp) < 0)
 						arr[0] = temp;
 				}
 				else {
-					if(index < 9 && arr[index].compareTo(arr[index + 1]) > 0) {
+					if(index < 9 && comparatorByCount.compare(arr[index], arr[index + 1]) > 0) {
 						WordInfo tmp = arr[index];
 						arr[index] = arr[index + 1];
 						arr[index + 1] = tmp;
@@ -343,30 +199,13 @@ public class H0516 {
 		return info;
 	}
 	
-	public static WordInfo insertBinary(List<WordInfo> list, String word) {
-		return list.get(insertBinary(list, word, 0, list.size() - 1));
-	}
-	
-	private static int insertBinary(List<WordInfo> list, String word, int start, int end) {
-
-		if(start > end) {
-			list.add(start, new WordInfo(word));
-			return start;
-		}
-
-		int middle = (start + end) / 2;
-
-		WordInfo info = list.get(middle);
-		int compare = info.word.compareTo(word);
-
-		if(compare == 0) {
-			info.countUp();
-			return middle;
-		}
-		else if(compare < 0) 
-			return insertBinary(list, word, start, middle - 1);
-		else
-			return insertBinary(list, word, middle + 1, end);
+	public static WordInfo insertBinary(List<WordInfo> list, String word) {		
+		WordInfo temp = list.get(
+				MyInsertion.insertBinary(list, new WordInfo(word, 0), comparatorByWord, 0, list.size() - 1)
+				);
+		temp.countUp();
+		
+		return temp;
 	}
 
 	public static <T> int contains(T[] arr, T s) {
