@@ -13,8 +13,7 @@ public class MyInsertion {
 
 		int middle = (start + end) / 2;
 
-		T current = list.get(middle);
-		int compare = current.compareTo(o);
+		int compare = list.get(middle).compareTo(o);
 
 		if(compare == 0) 
 			return middle;
