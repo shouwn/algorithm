@@ -223,8 +223,8 @@ public class Shakespeare {
 	
 	public static WordInfo insertBinary(List<WordInfo> list, String word) {		
 		WordInfo temp = list.get(
-				MyInsertion.insertBinary(list, new WordInfo(word, 0), comparatorByWord, 0, list.size() - 1)
-				);
+				MyInsertion.insertBinaryUnique(list, new WordInfo(word, 0), comparatorByWord, 0, list.size() - 1)
+		);
 		temp.countUp();
 		
 		return temp;
