@@ -42,7 +42,8 @@ public class E2 {
 		
 		for(int i = 0; i < N; i++) {
 			for(int j = 0; j < N; j++) {
-				
+				if(checkBuild(map, i, j))
+					ans++;
 			}
 		}
 		
@@ -50,29 +51,27 @@ public class E2 {
 	}
 	
 	public static boolean checkBuild(int[][] map, int r, int c) {
-		Boolean vol = false;
-		Boolean mul = false;
-		Boolean san = false;
-		Boolean cho = false;
 		
-		Boolean[] bols = new Boolean[] {vol, mul, san, cho};
+		boolean[] bols = new boolean[4];
 		
 		for(int i = r - 1; i <= r + 1; i++) {
-			for(int j = c - 1; j < c + 1; j++) {
+			for(int j = c - 1; j <= c + 1; j++) {
 				
-				if(check(bols, state(map, i, j)));
+				if(!check(bols, state(map, i, j)))
 					return false;
 			}
 		}
 		
-		
-		return mul && san && cho;
+		return bols[MUL] && bols[SAN] && bols[CHO];
 	}
 	
-	public static boolean check(Boolean[] bol, int num) {
+	public static boolean check(boolean[] bol, int num) {
 		switch(num) {
 		case IGNORE: return true;
-		case VOL: return false;
+		case VOL: bol[VOL] = true; return false;
+		case MUL: bol[MUL] = true; return true;
+		case SAN: bol[SAN] = true; return true;
+		case CHO: bol[CHO] = true; return true;
 		}
 		
 		return false;
